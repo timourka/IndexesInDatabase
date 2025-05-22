@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -22,7 +23,8 @@ int main() {
 	// полный проход по массивам
 	{
 		vector<int> indexes(n, 0);
-		while (true) {
+		bool end = false;
+		while (!end) {
 			for (int i = 0; i < n; i++) {
 				cout << arr[i][indexes[i]];
 			}
@@ -30,8 +32,10 @@ int main() {
 			indexes[n - 1]++;
 			for (int i = n - 1; i >= 0 && indexes[i] >= arr[i].size(); i--) {
 				indexes[i] = 0;
-				if (i == 0)
-					return 0;
+				if (i == 0) {
+					end = true;
+					break;
+				}
 				indexes[i - 1]++;
 			}
 		}
@@ -49,10 +53,11 @@ int main() {
 			}
 		}
 		sort(all(neededIndexes), [](vector<int>& first, vector<int>& second) -> bool {
-			for (int i = first.size(); i >= 0; i--) {
+			for (int i = 0; i < first.size(); i++) {
 				if (first[i] != second[i])
-					return first[i] != second[i];
+					return first[i] < second[i];
 			}
+			return false;
 			});
 		for (auto& it : neededIndexes) {
 			for (int i = 0; i < n; i++) {
@@ -69,13 +74,30 @@ int main() {
 		for (auto& it : neededIndexes) {
 			int m; cin >> m;
 			it = vector<int>(m);
-			for (auto itt : it) {
+			for (auto & itt : it) {
 				int a; cin >> a; --a;
 				itt = a;
 			}
 			sort(all(it));
 		}
-		//TODO: проход по списку
+		vector<int> indexes(n, 0);
+		bool end = false;
+		while (!end) {
+			for (int i = 0; i < n; i++) {
+				cout << arr[i][neededIndexes[i][indexes[i]]];
+			}
+			cout << " ";
+			indexes[n - 1]++;
+			for (int i = n - 1; i >= 0 && indexes[i] >= neededIndexes[i].size(); i--) {
+				indexes[i] = 0;
+				if (i == 0) {
+					end = true;
+					break;
+				}
+				indexes[i - 1]++;
+			}
+		}
+		cout << "\n";
 	}
 }
 
